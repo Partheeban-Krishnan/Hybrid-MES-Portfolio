@@ -4,8 +4,14 @@
 This POC demonstrates secure, real-time data flow between shop-floor machines and the cloud using a hybrid architecture. It combines MQTT for lightweight messaging and OPC UA for machine connectivity with RESTful APIs for structured, transactional data exchange between MES and enterprise systems.
 
 ## Architecture Diagram
+## MQTT
 <img width="938" height="568" alt="image" src="https://github.com/user-attachments/assets/1f0d84df-b230-404c-a66f-7722ca56a8e6" />
+
+## OPC UA
 <img width="944" height="631" alt="image" src="https://github.com/user-attachments/assets/156f601f-f9c7-409d-9e25-38f0f1a71d1d" />
+
+## REST API
+<img width="909" height="607" alt="image" src="https://github.com/user-attachments/assets/7b99dc1b-f770-476a-a644-79363167e43a" />
 
 ## Technologies Used
 - Protocols: MQTT, OPC UA, RESTful Web API
