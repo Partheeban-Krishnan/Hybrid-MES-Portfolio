@@ -1,0 +1,8 @@
+{
+  "syncSourceConfiguration": {
+    "lambda": {
+      "arn": "arn:aws:lambda:ap-south-1:760924770588:function:ForDigitalTwin"
+    }
+  },
+  "syncRole": "arn:aws:iam::<your-account-id>:role/DigitalTwinDashboardRole"
+}

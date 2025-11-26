@@ -1,0 +1,86 @@
+{
+  "Comment": "A description of my state machine",
+  "StartAt": "check machine state",
+  "States": {
+    "check machine state": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:ap-south-1:760924770588:function:check_machine_status_lambda:$LATEST",
+        "Payload.$": "$"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException",
+            "Lambda.TooManyRequestsException"
+          ],
+          "IntervalSeconds": 1,
+          "MaxAttempts": 3,
+          "BackoffRate": 2,
+          "JitterStrategy": "FULL"
+        }
+      ],
+      "ResultPath": "$.CheckResult",
+      "Next": "Choice"
+    },
+    "Choice": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.CheckResult.Payload.MachineStatus",
+          "StringEquals": "Running",
+          "Next": "Success"
+        },
+        {
+          "Variable": "$.CheckResult.Payload.MachineStatus",
+          "StringEquals": "Maintenance",
+          "Next": "MaintenanceWorkflow"
+        }
+      ],
+      "Default": "Reroute"
+    },
+    "MaintenanceWorkflow": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::states:startExecution.sync:2",
+      "Parameters": {
+        "StateMachineArn": "arn:aws:states:ap-south-1:760924770588:stateMachine:Maintenance_WF",
+        "Input": {
+          "Input.$": "$"
+        }
+      },
+      "End": true
+    },
+    "Success": {
+      "Type": "Succeed"
+    },
+    "Reroute": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "arn:aws:lambda:ap-south-1:760924770588:function:reroute_production_lambda:$LATEST",
+        "Payload": {
+          "MachineID.$": "$.CheckResult.Payload.MachineID",
+          "NewRoute": "RouteB"
+        }
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException",
+            "Lambda.TooManyRequestsException"
+          ],
+          "IntervalSeconds": 1,
+          "MaxAttempts": 3,
+          "BackoffRate": 2,
+          "JitterStrategy": "FULL"
+        }
+      ],
+      "End": true
+    }
+  }
+}

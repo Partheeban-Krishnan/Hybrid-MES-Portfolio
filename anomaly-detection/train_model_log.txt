@@ -1,0 +1,4 @@
+2025-11-10 09:34:03,076 - INFO - Rows fetched: 2005
+2025-11-10 09:34:03,230 - INFO - Model trained and saved successfully as isolation_forest_model.pkl
+2025-11-10 09:41:07,669 - INFO - Rows fetched: 2005
+2025-11-10 09:41:07,803 - INFO - Model trained and saved successfully as isolation_forest_model.pkl

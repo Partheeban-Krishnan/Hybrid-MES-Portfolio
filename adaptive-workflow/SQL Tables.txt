@@ -1,0 +1,200 @@
+USE [TestDB]
+GO
+
+/****** Object:  Table [dbo].[MESData]    Script Date: 11/18/2025 10:31:04 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MESData](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[MachineStatus] [varchar](50) NULL,
+	[QualityTrend] [varchar](50) NULL,
+	[ProductionTarget] [int] NULL,
+	[ProductionActual] [int] NULL,
+	[OperatorAvailability] [varchar](50) NULL,
+	[Timestamp] [datetime] NULL,
+	[ProcessedFlag] [bit] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MESData] ADD  DEFAULT ((0)) FOR [ProcessedFlag]
+GO
+
+-------------------------------------------------------------------------------------------------------------
+
+USE [TestDB]
+GO
+
+/****** Object:  Table [dbo].[MES_Routing]    Script Date: 11/18/2025 10:35:09 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MES_Routing](
+	[MachineID] [int] NOT NULL,
+	[CurrentRoute] [varchar](50) NOT NULL,
+	[UpdatedAt] [datetime] NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MES_Routing] ADD  DEFAULT (getdate()) FOR [UpdatedAt]
+GO
+
+ALTER TABLE [dbo].[MES_Routing]  WITH CHECK ADD  CONSTRAINT [FK_MachineID] FOREIGN KEY([MachineID])
+REFERENCES [dbo].[MESData] ([ID])
+GO
+
+ALTER TABLE [dbo].[MES_Routing] CHECK CONSTRAINT [FK_MachineID]
+GO
+-----------------------------------------------------------------------------------------------------------
+
+USE [TestDB]
+GO
+
+/****** Object:  Table [dbo].[MaintenanceResourceAllocation]    Script Date: 11/18/2025 10:37:39 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MaintenanceResourceAllocation](
+	[OrderID] [varchar](50) NOT NULL,
+	[ResourceID] [varchar](50) NOT NULL,
+	[Status] [varchar](50) NOT NULL,
+	[AllocatedAt] [datetime] NOT NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MaintenanceResourceAllocation] ADD  DEFAULT (getdate()) FOR [AllocatedAt]
+GO
+
+ALTER TABLE [dbo].[MaintenanceResourceAllocation]  WITH CHECK ADD FOREIGN KEY([OrderID])
+REFERENCES [dbo].[MaintenanceOrders] ([OrderID])
+GO
+
+
+-----------------------------------------------------------------------------------------------
+
+USE [TestDB]
+GO
+
+/****** Object:  Table [dbo].[MaintenanceOrders]    Script Date: 11/18/2025 10:40:57 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[MaintenanceOrders](
+	[OrderID] [varchar](50) NOT NULL,
+	[MachineID] [int] NOT NULL,
+	[Status] [varchar](50) NOT NULL,
+	[CreatedAt] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[OrderID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[MaintenanceOrders] ADD  DEFAULT (getdate()) FOR [CreatedAt]
+GO
+----------------------------
+CREATE TABLE MES_EnergyMetrics (
+    EnergyID INT IDENTITY(1,1) PRIMARY KEY,
+    RecordID INT NOT NULL,  -- FK to MES_ProductionData.RecordID
+    EnergyConsumed DECIMAL(10,2),  -- kWh
+    PowerPeak DECIMAL(10,2),       -- kW
+    EnergyCost DECIMAL(10,2),      -- Optional, currency
+    Timestamp DATETIME NOT NULL,
+    ProcessedFlag BIT DEFAULT 0,
+    CONSTRAINT FK_MES_EnergyMetrics_ProductionData FOREIGN KEY (RecordID)
+        REFERENCES MES_ProductionData(RecordID)
+);
+
+ALTER TABLE [dbo].[MaintenanceOrders]  WITH CHECK ADD FOREIGN KEY([MachineID])
+REFERENCES [dbo].[MESData] ([ID])
+GO
+
+
+-----------------------------------------------------------------------------------------------
+
+USE [TestDB]
+GO
+
+/****** Object:  Table [dbo].[Resources]    Script Date: 11/18/2025 10:43:45 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Resources](
+	[ResourceID] [int] NOT NULL,
+	[SkillMatrix] [int] NOT NULL,
+	[ResourceType] [varchar](50) NOT NULL,
+	[Status] [varchar](50) NOT NULL
+) ON [PRIMARY]
+GO
+-----------------------------
+
+CREATE TABLE MES_EnvironmentalData (
+    EnvID INT IDENTITY(1,1) PRIMARY KEY,
+    RecordID INT NOT NULL,  -- FK to MES_ProductionData.RecordID
+    Temperature DECIMAL(5,2),  -- °C
+    Humidity DECIMAL(5,2),     -- %
+    CO2Level DECIMAL(10,2),    -- ppm
+    AQI INT,                   -- Air Quality Index
+    NoiseLevel DECIMAL(5,2),   -- dB (optional)
+    Timestamp DATETIME NOT NULL,
+    ProcessedFlag BIT DEFAULT 0,
+    CONSTRAINT FK_MES_EnvironmentalData_ProductionData FOREIGN KEY (RecordID)
+        REFERENCES MES_ProductionData(RecordID)
+------------------------
+CREATE TABLE MES_MaintenanceLogs (
+    MaintenanceID INT IDENTITY(1,1) PRIMARY KEY,
+    RecordID INT NOT NULL,  -- FK to MES_ProductionData.RecordID
+    MaintenanceType VARCHAR(50),  -- Planned / Unplanned
+    IssueDescription VARCHAR(255),
+    ActionTaken VARCHAR(255),
+    StartTime DATETIME,
+    EndTime DATETIME,
+    TechnicianID VARCHAR(50),
+    Cost DECIMAL(10,2),
+    Status VARCHAR(50),  -- Completed / Pending
+    Timestamp DATETIME NOT NULL,
+    ProcessedFlag BIT DEFAULT 0,
+    CONSTRAINT FK_MES_MaintenanceLogs_ProductionData FOREIGN KEY (RecordID)
+        REFERENCES MES_ProductionData(RecordID)
+);
+--------------------------
+CREATE TABLE MES_AssetMetadata (
+    AssetID INT IDENTITY(1,1) PRIMARY KEY,
+    MachineID VARCHAR(50) NOT NULL,  -- FK to MES_ProductionData.MachineID
+    AssetName VARCHAR(100),
+    AssetType VARCHAR(50),
+    Location VARCHAR(100),
+    Manufacturer VARCHAR(100),
+    ModelNumber VARCHAR(50),
+    InstallDate DATE,
+    Capacity INT,
+    MaintenanceInterval INT,  -- in days
+    Criticality VARCHAR(20),
+    Status VARCHAR(20),
+    Timestamp DATETIME DEFAULT GETDATE()
+);
+
+
+
+
+

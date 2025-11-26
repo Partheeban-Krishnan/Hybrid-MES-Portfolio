@@ -1,0 +1,96 @@
+{
+  "functions": {
+    "dataReader": {
+      "implementedBy": {
+        "lambda": {
+          "arn": "arn:aws:lambda:ap-south-1:760924770588:function:ForDigitalTwin"
+        },
+        "isNative": false
+      }
+    }
+  },
+  "isSingleton": false,
+  "propertyDefinitions": {
+    "CO2Level": {
+      "dataType": {
+        "type": "DOUBLE"
+      },
+      "isExternalId": false,
+      "isRequiredInEntity": false,
+      "isStoredExternally": false,
+      "isTimeSeries": false
+    },
+    "EnergyConsumed": {
+      "dataType": {
+        "type": "DOUBLE"
+      },
+      "isExternalId": false,
+      "isRequiredInEntity": false,
+      "isStoredExternally": false,
+      "isTimeSeries": false
+    },
+    "EnvTemp": {
+      "dataType": {
+        "type": "DOUBLE"
+      },
+      "isExternalId": false,
+      "isRequiredInEntity": false,
+      "isStoredExternally": false,
+      "isTimeSeries": false
+    },
+    "Humidity": {
+      "dataType": {
+        "type": "DOUBLE"
+      },
+      "isExternalId": false,
+      "isRequiredInEntity": false,
+      "isStoredExternally": false,
+      "isTimeSeries": false
+    },
+    "MachineID": {
+      "dataType": {
+        "type": "STRING"
+      },
+      "isExternalId": false,
+      "isRequiredInEntity": true,
+      "isStoredExternally": false,
+      "isTimeSeries": false
+    },
+    "MachineTemp": {
+      "dataType": {
+        "type": "DOUBLE"
+      },
+      "isExternalId": false,
+      "isRequiredInEntity": false,
+      "isStoredExternally": false,
+      "isTimeSeries": false
+    },
+    "PowerPeak": {
+      "dataType": {
+        "type": "DOUBLE"
+      },
+      "isExternalId": false,
+      "isRequiredInEntity": false,
+      "isStoredExternally": false,
+      "isTimeSeries": false
+    },
+    "Pressure": {
+      "dataType": {
+        "type": "DOUBLE"
+      },
+      "isExternalId": false,
+      "isRequiredInEntity": false,
+      "isStoredExternally": false,
+      "isTimeSeries": false
+    },
+    "Status": {
+      "dataType": {
+        "type": "STRING"
+      },
+      "isExternalId": false,
+      "isRequiredInEntity": false,
+      "isStoredExternally": false,
+      "isTimeSeries": false
+    }
+  }
+}

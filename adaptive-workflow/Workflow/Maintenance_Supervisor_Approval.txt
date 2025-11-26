@@ -1,0 +1,32 @@
+import boto3
+import os
+import json
+
+sns = boto3.client('sns')
+SNS_TOPIC_ARN = os.environ['SNS_TOPIC_ARN']
+
+def lambda_handler(event, context):
+    print("Incoming Event:", json.dumps(event))
+
+    try:
+        # Extract Machine ID
+        machine_id = event.get('MachineId') or event.get('MachineID') or \
+                     (event.get('queryStringParameters', {}).get('machineId'))
+
+        if not machine_id:
+            return {"status": "Missing MachineID", "debug_event": event}
+
+        # Send SNS notification
+        sns.publish(
+            TopicArn=SNS_TOPIC_ARN,
+            Message=f"Machine ID: {machine_id}\nApproval Required",
+            Subject="Maintenance Approval Notification"
+        )
+
+        return {
+            "status": "Notification sent",
+            "MachineID": machine_id
+        }
+
+    except Exception as e:
+        return {"status": "Internal Error", "error": str(e)}
