@@ -1,0 +1,64 @@
+import json
+import pymssql
+import logging
+import os
+
+# Configure logging
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+# Fetch environment variables
+DB_HOST = os.environ.get("DB_HOST")
+DB_USER = os.environ.get("DB_USER")
+DB_PASSWORD = os.environ.get("DB_PASSWORD")
+DB_NAME = os.environ.get("DB_NAME")
+
+def lambda_handler(event, context):
+    try:
+        logger.info(f"Received event: {json.dumps(event)}")
+
+        # Connect to SQL Server RDS
+        conn = pymssql.connect(server=DB_HOST, user=DB_USER, password=DB_PASSWORD, database=DB_NAME)
+        cursor = conn.cursor()
+
+        # Fetch latest record
+        query = """
+        SELECT ID,MachineStatus, QualityTrend, ProductionTarget, ProductionActual
+        FROM MESData
+        ORDER BY Timestamp DESC
+        OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY
+        """
+        cursor.execute(query)
+        row = cursor.fetchone()
+
+        if not row:
+            logger.warning("No records found in the database.")
+            return {"status": "error", "message": "No data available"}
+
+        response = {
+            
+    "MachineID": row[0],
+    "MachineStatus": row[1],
+    "QualityTrend": row[2],
+    "ProductionTarget": row[3],
+    "ProductionActual": row[4]
+
+        }
+
+        logger.info(f"Returning response: {response}")
+        return response
+
+    except pymssql.DatabaseError as e:
+        logger.error(f"Database error: {str(e)}")
+        return {"status": "error", "message": f"Database error: {str(e)}"}
+
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        return {"status": "error", "message": f"Unexpected error: {str(e)}"}
+
+    finally:
+        try:
+            cursor.close()
+            conn.close()
+        except:
+            logger.warning("Failed to close DB connection properly.")

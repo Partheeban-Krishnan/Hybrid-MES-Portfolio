@@ -1,0 +1,89 @@
+import json
+import pymssql
+import logging
+import os
+from datetime import datetime
+
+# Configure logging
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+# Fetch environment variables
+DB_HOST = os.environ.get("DB_HOST")
+DB_USER = os.environ.get("DB_USER")
+DB_PASSWORD = os.environ.get("DB_PASSWORD")
+DB_NAME = os.environ.get("DB_NAME")
+
+def lambda_handler(event, context):
+    try:
+        logger.info(f"Received event: {json.dumps(event)}")
+
+        order_id = event.get('OrderID')
+        machine_id = event.get('MachineID')
+
+        if not order_id or not machine_id:
+            logger.error("Missing OrderID or MachineID in event.")
+            return {"status": "error", "message": "OrderID and MachineID are required"}
+
+        # Connect to SQL Server RDS
+        conn = pymssql.connect(server=DB_HOST, user=DB_USER, password=DB_PASSWORD, database=DB_NAME)
+        cursor = conn.cursor()
+
+        # Example resource allocation logic
+        # For simplicity, pick first available technician and tool
+        select_query = """
+        SELECT TOP 1 ResourceID FROM Resources WHERE Status = 'Available' AND ResourceType = 'Technician'
+        """
+        cursor.execute(select_query)
+        tech_row = cursor.fetchone()
+        technician_id = tech_row[0] if tech_row else None
+
+        select_query_tool = """
+        SELECT TOP 1 ResourceID FROM Resources WHERE Status = 'Available' AND ResourceType = 'Equipment'
+        """
+        cursor.execute(select_query_tool)
+        tool_row = cursor.fetchone()
+        tool_id = tool_row[0] if tool_row else None
+
+        if not technician_id or not tool_id:
+            logger.warning("No available resources found.")
+            return {"status": "error", "message": "Resources not available"}
+
+        # Insert allocation details
+        insert_query = """
+        INSERT INTO MaintenanceResourceAllocation (OrderID, ResourceID, Status, AllocatedAt)
+        VALUES (%s, %s, %s, %s)
+        """
+        cursor.execute(insert_query, (order_id, technician_id, 'Allocated', datetime.now()))
+        cursor.execute(insert_query, (order_id, tool_id, 'Allocated', datetime.now()))
+        conn.commit()
+
+        # Update Maintenance Order status
+        update_query = """
+        UPDATE MaintenanceOrders SET Status = %s WHERE OrderID = %s
+        """
+        cursor.execute(update_query, ('ResourcesAllocated', order_id))
+        conn.commit()
+
+        logger.info(f"Resources allocated for OrderID: {order_id}")
+
+        return {
+            "status": "Resources allocated",
+            "OrderID": order_id,
+            "AllocatedResources": [technician_id, tool_id]
+        }
+
+    except pymssql.DatabaseError as e:
+        logger.error(f"Database error: {str(e)}")
+        return {"status": "error", "message": f"Database error: {str(e)}"}
+
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        return {"status": "error", "message": f"Unexpected error: {str(e)}"}
+
+    finally:
+        try:
+            cursor.close()
+            conn.close()
+        except:
+            logger.warning("Failed to close DB connection properly.")

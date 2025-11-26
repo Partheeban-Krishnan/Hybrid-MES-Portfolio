@@ -1,0 +1,42 @@
+2025-11-10 09:37:19,452 - INFO - Model loaded successfully.
+2025-11-10 09:37:20,015 - INFO - Rows fetched for anomaly detection: 1904
+2025-11-10 09:37:20,145 - INFO - Anomalies detected: 51
+2025-11-10 09:37:20,145 - INFO - Anomalies inserted successfully.
+2025-11-10 09:37:44,414 - INFO - Model loaded successfully.
+2025-11-10 09:37:45,096 - INFO - Rows fetched for anomaly detection: 1853
+2025-11-10 09:37:45,186 - INFO - Anomalies detected: 33
+2025-11-10 09:37:45,186 - INFO - Anomalies inserted successfully.
+2025-11-10 09:41:20,488 - INFO - Model loaded successfully.
+2025-11-10 09:41:21,040 - INFO - Rows fetched for anomaly detection: 1820
+2025-11-10 09:41:21,112 - INFO - Anomalies detected: 14
+2025-11-10 09:41:21,112 - INFO - Anomalies inserted successfully.
+2025-11-10 09:45:02,913 - INFO - Model loaded successfully.
+2025-11-10 09:45:04,536 - INFO - Rows fetched for anomaly detection: 3806
+2025-11-10 09:45:04,872 - INFO - Anomalies detected: 136
+2025-11-10 09:45:04,873 - INFO - Anomalies inserted successfully.
+2025-11-10 09:54:50,079 - INFO - Model loaded successfully.
+2025-11-10 09:54:50,474 - ERROR - Error occurred: (pyodbc.ProgrammingError) ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'ProcessedFlag'. (207) (SQLExecDirectW)")
+[SQL: 
+    SELECT RecordID, QuantityProduced, Defects, Temperature, Pressure, StartTime, EndTime
+    FROM MES_ProductionData
+    WHERE ProcessedFlag = 0
+    ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-11-10 09:58:52,977 - INFO - Model loaded successfully.
+2025-11-10 09:58:53,384 - ERROR - Error occurred: (pyodbc.ProgrammingError) ('42S22', "[42S22] [Microsoft][ODBC Driver 17 for SQL Server][SQL Server]Invalid column name 'ProcessedFlag'. (207) (SQLExecDirectW)")
+[SQL: 
+    SELECT RecordID, QuantityProduced, Defects, Temperature, Pressure, StartTime, EndTime
+    FROM MES_ProductionData
+    WHERE ProcessedFlag = 0
+    ]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-11-10 10:02:10,816 - INFO - Model loaded successfully.
+2025-11-10 10:02:11,455 - INFO - Rows fetched for anomaly detection: 4000
+2025-11-10 10:02:17,364 - INFO - Anomalies detected: 198
+2025-11-10 10:02:17,364 - INFO - \u2705 Processing completed.
+2025-11-10 10:07:43,503 - INFO - Model loaded successfully.
+2025-11-10 10:07:44,088 - INFO - Rows fetched for anomaly detection: 0
+2025-11-10 10:07:44,088 - INFO - No new data to process.
+2025-11-10 10:16:39,574 - INFO - Model loaded successfully.
+2025-11-10 10:16:40,224 - INFO - Rows fetched for anomaly detection: 0
+2025-11-10 10:16:40,224 - INFO - No new data to process.
