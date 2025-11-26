@@ -9,6 +9,39 @@ This repository contains hands-on Proof-of-Concepts (POCs) exploring next-genera
 - [Adaptive Workflow & Human-in-the-Loop](adaptive-workflow/README.md)
 - [Digital Twin with Real-Time Monitoring](digital-twin/README.md)
 
+## Tech Stack
+**AWS Services**
+- EC2 (Cloud hosting for MES components)
+- RDS (SQL Server) (Data storage for MES production and quality data)
+- Lambda (Serverless execution for anomaly detection and workflows)
+- Step Functions (Adaptive workflows & orchestration)
+- SNS (Notifications & Human-in-the-Loop approvals)
+- EventBridge (Event-driven triggers)
+- API Gateway (RESTful API integration)
+- IoT TwinMaker (Digital Twin visualization)
+- S3 (Storage for models and assets)
+- SageMaker (AI/ML model training and retraining)
+
+**Messaging & Integration**
+- RabbitMQ (MQTT) (Edge-to-cloud real-time messaging)
+- OPC UA (Edge connectivity for machine data)
+- RESTful Web API (Enterprise ↔ Cloud integration)
+  
+**Data & Visualization**
+- Grafana OSS (Dashboards for MES KPIs, anomaly trends, workflow status)
+- Neo4j + PyVis (Graph-based machine relationships for Digital Twin)
+
+**Machine Learning**
+- Isolation Forest (Anomaly detection)
+- Python (scikit-learn, pandas) for model development
+- Docker (Packaging Lambda functions)
+  
+**Automation**
+- Windows Task Scheduler (Periodic anomaly detection jobs)
+
+**Programming Languages**
+- Python (Scripts for MQTT, REST API, ML models)
+- Flask (Web services for visualization and streaming)
 ## Repository Structure
 ```
 hybrid-mes-portfolio/
