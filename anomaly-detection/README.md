@@ -27,3 +27,53 @@ This POC demonstrates how MES data can be leveraged for predictive analytics usi
 - Data-Driven Decisions: Real-time dashboards empower operators and managers
 - Scalability: Cloud-native design supports multi-plant deployments
 - Cost Efficiency: Serverless execution reduces infrastructure overhead
+
+  ## Code Snipet
+  
+## Code Highlight: AI-Powered Anomaly Detection
+```python
+from sklearn.ensemble import IsolationForest
+from sklearn.preprocessing import StandardScaler
+
+# Feature engineering
+df['CycleTime'] = (df['EndTime'] - df['StartTime']).dt.total_seconds() / 60
+df['DefectsRatio'] = df['Defects'] / df['QuantityProduced']
+df['ProductionRate'] = df['QuantityProduced'] / df['CycleTime']
+
+# Scale features
+features = ['QuantityProduced', 'Defects', 'Temperature', 'Pressure', 'CycleTime', 'DefectsRatio', 'ProductionRate']
+X_scaled = StandardScaler().fit_transform(df[features])
+
+# Predict anomalies
+model = IsolationForest(contamination=0.05)
+model.fit(X_scaled)
+df['AnomalyFlag'] = model.predict(X_scaled)
+**Full script available in anomaly-detection folder.** 
+```
+## Code Highlight: Training Isolation Forest Model
+```python
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import IsolationForest
+import joblib
+
+# Feature engineering
+df['CycleTime'] = (df['EndTime'] - df['StartTime']).dt.total_seconds() / 60
+df['DefectsRatio'] = df['Defects'] / df['QuantityProduced']
+df['ProductionRate'] = df['QuantityProduced'] / df['CycleTime']
+
+# Scale features
+features = ['QuantityProduced', 'Defects', 'Temperature', 'Pressure', 'CycleTime', 'DefectsRatio', 'ProductionRate']
+X_scaled = StandardScaler().fit_transform(df[features])
+
+# Train Isolation Forest model
+model = IsolationForest(contamination=0.05, random_state=42)
+model.fit(X_scaled)
+
+# Save model
+joblib.dump(model, "isolation_forest_model.pkl")
+
+**Full script available in anomaly-detection folder.**
+```
+
+
+
