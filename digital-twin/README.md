@@ -70,3 +70,4 @@ def update_twinmaker(entity_id, machine_id, prod, energy, env):
     print(f"Update successful for {machine_id}: {response['updateDateTime']}")
 
 **Full script available in digital-twin folder.**
+```
