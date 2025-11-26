@@ -44,3 +44,29 @@ This POC demonstrates how Digital Twin technology can be integrated with MES dat
 - 📈 Scalability: Cloud-native design supports multi-plant deployments
 - 🔒 Compliance: Human-in-the-Loop approvals for critical events
 
+## Code Snipet
+
+## Code Highlight: AWS IoT TwinMaker Update
+```python
+client = boto3.client("iottwinmaker", region_name="ap-south-1")
+
+def update_twinmaker(entity_id, machine_id, prod, energy, env):
+    update_payload = {
+        "componentUpdates": {
+            "MachineDataSource": {
+                "propertyUpdates": {
+                    "MachineID": {"value": {"stringValue": machine_id}},
+                    "Status": {"value": {"stringValue": prod['Status']}},
+                    "MachineTemp": {"value": {"doubleValue": float(prod['Temperature'])}}
+                }
+            }
+        }
+    }
+    response = client.update_entity(
+        workspaceId="DigitalTwin",
+        entityId=entity_id,
+        componentUpdates=update_payload["componentUpdates"]
+    )
+    print(f"Update successful for {machine_id}: {response['updateDateTime']}")
+
+**Full script available in digital-twin folder.**
