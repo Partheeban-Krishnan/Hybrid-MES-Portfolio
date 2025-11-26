@@ -4,10 +4,11 @@
 This repository contains hands-on Proof-of-Concepts (POCs) exploring next-generation Hybrid MES architectures aligned with Industry 4.0 principles.
 
 ### POCs Included
-- [Edge-to-Cloud Integration](edge-to-cloud/README.md)
+- [Digital Twin with Real-Time Monitoring](digital-twin/README.md)
 - [AI-Powered Anomaly Detection](anomaly-detection/README.md)
 - [Adaptive Workflow & Human-in-the-Loop](adaptive-workflow/README.md)
-- [Digital Twin with Real-Time Monitoring](digital-twin/README.md)
+- [Edge-to-Cloud Integration](edge-to-cloud/README.md)
+
 
 ## Tech Stack
 **AWS Services**
