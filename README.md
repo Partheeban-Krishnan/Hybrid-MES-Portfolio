@@ -1,5 +1,5 @@
 # Hybrid MES Portfolio – Advanced Use Cases
-### Hybrid-mes,Manufacturing-Execution-System,Industry-4.0,edge-computing,cloud-integration,IIOT,AI/ML,MQTT,OPC-UA,AWS,Digital-twin,Predictive-Maintenance,Grafana,Apache-kafka,Rest API,adaptive-workflow,Smart-Manufacturing
+### Hybrid-MES,Manufacturing-Execution-System,Industry-4.0,edge-computing,cloud-integration,IIOT,AI/ML,MQTT,OPC-UA,AWS,Digital-twin,Predictive-Maintenance,Grafana,Apache-kafka,Rest API,adaptive-workflow,Smart-Manufacturing
 
 ## Introduction
 This repository contains hands-on Proof-of-Concepts (POCs) exploring next-generation Hybrid MES architectures aligned with Industry 4.0 principles.
